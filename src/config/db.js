@@ -1,10 +1,12 @@
-import pg from "pg";
+// src/config/db.js
+import pkg from "pg";
 import dotenv from "dotenv";
 
 dotenv.config();
+const { Pool } = pkg;
 
-const pool = new pg.Pool({
-  connectionString: process.env.DATABASE_URL, // put in .env
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL, // must not be undefined
 });
 
 export default pool;
