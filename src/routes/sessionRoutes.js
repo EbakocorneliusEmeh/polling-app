@@ -1,14 +1,13 @@
-// src/routes/sessionRoutes.js
 import express from "express";
-import authMiddleware from "../middleware/authMiddleware.js";
+import { protect } from "../middleware/authMiddleware.js"; // use named export
 import { createSession, getSessions } from "../controllers/sessionController.js";
 
 const router = express.Router();
 
 // Only logged-in hosts can create sessions
-router.post("/", authMiddleware, createSession);
+router.post("/", protect, createSession);
 
 // Only logged-in hosts can view their sessions
-router.get("/", authMiddleware, getSessions);
+router.get("/", protect, getSessions);
 
 export default router;
