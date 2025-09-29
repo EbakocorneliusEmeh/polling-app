@@ -35,3 +35,15 @@ CREATE TABLE IF NOT EXISTS poll_options (
     text TEXT NOT NULL,
     votes INT DEFAULT 0
 );
+
+
+
+CREATE TABLE responses (
+    id SERIAL PRIMARY KEY,
+    session_code VARCHAR(20) NOT NULL,
+    participant_email VARCHAR(100) NOT NULL,
+    poll_id INTEGER NOT NULL,
+    option_id INTEGER,
+    text TEXT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
