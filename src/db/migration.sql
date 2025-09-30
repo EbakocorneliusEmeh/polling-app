@@ -47,3 +47,23 @@ CREATE TABLE responses (
     text TEXT,
     created_at TIMESTAMP DEFAULT NOW()
 );
+
+
+CREATE TABLE participant_responses (
+    id SERIAL PRIMARY KEY,
+    participant_id INT REFERENCES participants(id) ON DELETE CASCADE,
+    poll_id INT NOT NULL,                -- the poll this response is for
+    option_id INT,                       -- if single/multiple choice
+    text TEXT,                           -- if open-ended
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+
+CREATE TABLE participant_responses (
+    id SERIAL PRIMARY KEY,
+    session_id INT REFERENCES sessions(id) ON DELETE CASCADE,
+    participant_name VARCHAR(100) NOT NULL,
+    participant_email VARCHAR(100) NOT NULL,
+    answers JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
