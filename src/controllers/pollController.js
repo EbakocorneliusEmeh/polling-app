@@ -309,6 +309,7 @@ import {
   getPollsBySession,
   updatePollStatus,
   deletePoll,
+  saveResponse,
 } from "../models/pollModel.js";
 
 // Create poll
@@ -388,5 +389,26 @@ export const deletePollController = async (req, res) => {
   } catch (err) {
     console.error("Delete Poll Error:", err);
     res.status(500).json({ message: err.message || "Server error" });
+  }
+};
+
+// Save participant response
+export const submitResponseController = async (req, res) => {
+  try {
+    const { pollId, participantId, optionId } = req.body;
+
+    if (!pollId || !participantId || !optionId) {
+      return res.status(400).json({ message: "pollId, participantId, and optionId are required" });
+    }
+
+    const response = await saveResponse(pollId, participantId, optionId);
+
+    const io = req.app.get("io");
+    io.to(response.poll_id).emit("responseSubmitted", response);
+
+    res.status(201).json({ message: "Response saved", response });
+  } catch (err) {
+    console.error("Error saving response:", err);
+    res.status(500).json({ message: "Error saving response" });
   }
 };
