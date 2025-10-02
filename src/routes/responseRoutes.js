@@ -1,12 +1,3 @@
-// import express from "express";
-// import { submitResponsesController } from "../controllers/responseController.js";
-
-// const router = express.Router();
-
-// router.post("/:sessionCode/responses", submitResponsesController);
-
-// export default router;
-
 
 // src/routes/responseRoutes.js
 import express from "express";
