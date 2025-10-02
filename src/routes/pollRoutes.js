@@ -66,7 +66,6 @@
 // export default router;
 
 
-
 // src/routes/pollRoutes.js
 import express from "express";
 import {
@@ -78,6 +77,17 @@ import {
 
 const router = express.Router();
 
+/**
+ * Poll Routes
+ * Base path should be something like: /api/sessions
+ *
+ * Example:
+ * POST   /api/sessions/:sessionCode/polls       -> Create a poll
+ * GET    /api/sessions/:sessionCode/polls       -> Get all polls in a session
+ * PUT    /api/sessions/:sessionCode/polls/:id   -> Update poll status
+ * DELETE /api/sessions/:sessionCode/polls/:id   -> Delete poll
+ */
+
 // Create poll
 router.post("/:sessionCode/polls", createPollController);
 
@@ -85,9 +95,9 @@ router.post("/:sessionCode/polls", createPollController);
 router.get("/:sessionCode/polls", getPollsController);
 
 // Update poll status
-router.put("/polls/:pollId/status", updatePollStatusController);
+router.put("/:sessionCode/polls/:pollId/status", updatePollStatusController);
 
 // Delete poll
-router.delete("/polls/:pollId", deletePollController);
+router.delete("/:sessionCode/polls/:pollId", deletePollController);
 
 export default router;
