@@ -142,7 +142,174 @@
 
 
 
-import { createPoll, getPollsBySession, updatePollStatus } from "../models/pollModel.js";
+// import { createPoll, getPollsBySession, updatePollStatus } from "../models/pollModel.js";
+
+// // Create poll
+// export const createPollController = async (req, res) => {
+//   try {
+//     const sessionCode = req.params.sessionCode || req.body.sessionCode;
+//     const { question, options, type } = req.body;
+
+//     if (!sessionCode) {
+//       return res.status(400).json({ message: "Session code is required" });
+//     }
+//     if (!question || !type) {
+//       return res.status(400).json({ message: "Question and type are required" });
+//     }
+
+//     const poll = await createPoll(sessionCode, question, options || [], type);
+
+//     // ✅ Emit event to everyone in this session room
+//     const io = req.app.get("io");
+//     io.to(sessionCode).emit("pollCreated", poll);
+
+//     res.status(201).json(poll);
+//   } catch (err) {
+//     console.error("Create Poll Error:", err);
+//     res.status(500).json({ message: err.message || "Server error" });
+//   }
+// };
+
+// // Get polls
+// export const getPollsController = async (req, res) => {
+//   try {
+//     const sessionCode = req.params.sessionCode || req.query.sessionCode;
+//     if (!sessionCode) {
+//       return res.status(400).json({ message: "Session code is required" });
+//     }
+
+//     const polls = await getPollsBySession(sessionCode);
+//     res.json({ polls });
+//   } catch (err) {
+//     console.error("Get Polls Error:", err);
+//     res.status(500).json({ message: err.message || "Server error" });
+//   }
+// };
+
+// // Update poll status
+// export const updatePollStatusController = async (req, res) => {
+//   try {
+//     const { pollId } = req.params;
+//     const { status } = req.body;
+
+//     if (!pollId || !status) {
+//       return res.status(400).json({ message: "Poll ID and status required" });
+//     }
+
+//     const poll = await updatePollStatus(pollId, status);
+
+//     const io = req.app.get("io"); // ✅ fixed
+//     if (poll && poll.code) {
+//       io.to(poll.code).emit("pollUpdated", poll);
+//     }
+
+//     res.json(poll);
+//   } catch (err) {
+//     console.error("Update Poll Error:", err);
+//     res.status(500).json({ message: err.message || "Server error" });
+//   }
+// };
+
+
+// // src/controllers/pollController.js
+// import { createPoll, getPollsBySession, updatePollStatus, deletePoll } from "../models/pollModel.js";
+
+// // ✅ Create poll
+// export const createPollController = async (req, res) => {
+//   try {
+//     const sessionCode = req.params.sessionCode || req.body.sessionCode;
+//     const { question, options, type } = req.body;
+
+//     if (!sessionCode) {
+//       return res.status(400).json({ message: "Session code is required" });
+//     }
+//     if (!question || !type) {
+//       return res.status(400).json({ message: "Question and type are required" });
+//     }
+
+//     const poll = await createPoll(sessionCode, question, options || [], type);
+
+//     // Emit event
+//     const io = req.app.get("io");
+//     io.to(sessionCode).emit("pollCreated", poll);
+
+//     res.status(201).json(poll);
+//   } catch (err) {
+//     console.error("Create Poll Error:", err);
+//     res.status(500).json({ message: err.message || "Server error" });
+//   }
+// };
+
+// // ✅ Get polls
+// export const getPollsController = async (req, res) => {
+//   try {
+//     const sessionCode = req.params.sessionCode || req.query.sessionCode;
+//     if (!sessionCode) {
+//       return res.status(400).json({ message: "Session code is required" });
+//     }
+
+//     const polls = await getPollsBySession(sessionCode);
+//     res.json({ polls });
+//   } catch (err) {
+//     console.error("Get Polls Error:", err);
+//     res.status(500).json({ message: err.message || "Server error" });
+//   }
+// };
+
+// // ✅ Update poll status
+// export const updatePollStatusController = async (req, res) => {
+//   try {
+//     const { pollId } = req.params;
+//     const { status } = req.body;
+
+//     if (!pollId || !status) {
+//       return res.status(400).json({ message: "Poll ID and status required" });
+//     }
+
+//     const poll = await updatePollStatus(pollId, status);
+
+//     const io = req.app.get("io");
+//     if (poll && poll.code) {
+//       io.to(poll.code).emit("pollUpdated", poll);
+//     }
+
+//     res.json(poll);
+//   } catch (err) {
+//     console.error("Update Poll Error:", err);
+//     res.status(500).json({ message: err.message || "Server error" });
+//   }
+// };
+
+// // ✅ Delete poll
+// export const deletePollController = async (req, res) => {
+//   try {
+//     const { pollId } = req.params;
+//     if (!pollId) {
+//       return res.status(400).json({ message: "Poll ID required" });
+//     }
+
+//     const deletedPoll = await deletePoll(pollId);
+
+//     const io = req.app.get("io");
+//     if (deletedPoll && deletedPoll.code) {
+//       io.to(deletedPoll.code).emit("pollDeleted", deletedPoll);
+//     }
+
+//     res.json({ message: "Poll deleted", poll: deletedPoll });
+//   } catch (err) {
+//     console.error("Delete Poll Error:", err);
+//     res.status(500).json({ message: err.message || "Server error" });
+//   }
+// };
+
+
+// src/controllers/pollController.js
+import {
+  createPoll,
+  getPollsBySession,
+  updatePollStatus,
+  deletePoll,
+} from "../models/pollModel.js";
 
 // Create poll
 export const createPollController = async (req, res) => {
@@ -150,16 +317,12 @@ export const createPollController = async (req, res) => {
     const sessionCode = req.params.sessionCode || req.body.sessionCode;
     const { question, options, type } = req.body;
 
-    if (!sessionCode) {
-      return res.status(400).json({ message: "Session code is required" });
-    }
-    if (!question || !type) {
-      return res.status(400).json({ message: "Question and type are required" });
-    }
+    if (!sessionCode) return res.status(400).json({ message: "Session code is required" });
+    if (!question || !type) return res.status(400).json({ message: "Question and type are required" });
 
     const poll = await createPoll(sessionCode, question, options || [], type);
 
-    // ✅ Emit event to everyone in this session room
+    // emit event
     const io = req.app.get("io");
     io.to(sessionCode).emit("pollCreated", poll);
 
@@ -174,9 +337,7 @@ export const createPollController = async (req, res) => {
 export const getPollsController = async (req, res) => {
   try {
     const sessionCode = req.params.sessionCode || req.query.sessionCode;
-    if (!sessionCode) {
-      return res.status(400).json({ message: "Session code is required" });
-    }
+    if (!sessionCode) return res.status(400).json({ message: "Session code is required" });
 
     const polls = await getPollsBySession(sessionCode);
     res.json({ polls });
@@ -198,7 +359,7 @@ export const updatePollStatusController = async (req, res) => {
 
     const poll = await updatePollStatus(pollId, status);
 
-    const io = req.app.get("io"); // ✅ fixed
+    const io = req.app.get("io");
     if (poll && poll.code) {
       io.to(poll.code).emit("pollUpdated", poll);
     }
@@ -206,6 +367,26 @@ export const updatePollStatusController = async (req, res) => {
     res.json(poll);
   } catch (err) {
     console.error("Update Poll Error:", err);
+    res.status(500).json({ message: err.message || "Server error" });
+  }
+};
+
+// Delete poll
+export const deletePollController = async (req, res) => {
+  try {
+    const { pollId } = req.params;
+    if (!pollId) return res.status(400).json({ message: "Poll ID required" });
+
+    const deletedPoll = await deletePoll(pollId);
+
+    const io = req.app.get("io");
+    if (deletedPoll && deletedPoll.code) {
+      io.to(deletedPoll.code).emit("pollDeleted", deletedPoll.id);
+    }
+
+    res.json({ message: "Poll deleted successfully", poll: deletedPoll });
+  } catch (err) {
+    console.error("Delete Poll Error:", err);
     res.status(500).json({ message: err.message || "Server error" });
   }
 };

@@ -31,7 +31,7 @@ export const createSession = async (req, res) => {
       session,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Create session error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -39,7 +39,7 @@ export const createSession = async (req, res) => {
 // Get all sessions for the logged-in host
 export const getSessions = async (req, res) => {
   try {
-    const hostId = req.user.id; // from JWT middleware
+    const hostId = req.user.id;
 
     const query = `
       SELECT id, title, code, status, created_at
@@ -54,7 +54,36 @@ export const getSessions = async (req, res) => {
       sessions: rows,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Get sessions error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ✅ Delete a session
+export const deleteSession = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const hostId = req.user.id;
+
+    // Check if session exists and belongs to user
+    const checkQuery = `SELECT id, host_id FROM sessions WHERE id = $1`;
+    const { rows } = await pool.query(checkQuery, [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Session not found" });
+    }
+
+    if (rows[0].host_id !== hostId) {
+      return res.status(403).json({ message: "Not authorized to delete this session" });
+    }
+
+    // Delete session
+    const deleteQuery = `DELETE FROM sessions WHERE id = $1`;
+    await pool.query(deleteQuery, [id]);
+
+    return res.json({ message: "Session deleted successfully" });
+  } catch (err) {
+    console.error("Delete session error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
