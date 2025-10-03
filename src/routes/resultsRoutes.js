@@ -1,22 +1,3 @@
-
-
-// // src/routes/resultsRoutes.js
-// import express from "express";
-// import { protect } from "../middleware/authMiddleware.js"; // only hosts can publish
-// import { getSubmissions, publishResults } from "../controllers/resultsController.js";
-
-// const router = express.Router();
-
-// // Host fetches all submissions
-// router.get("/:sessionCode/submissions", protect, getSubmissions);
-
-// // Host publishes results
-// router.post("/:sessionCode/publish", protect, publishResults);
-
-// export default router;
-
-
-
 // src/routes/resultsRoutes.js
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js"; 

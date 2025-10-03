@@ -1,6 +1,3 @@
-
-
-
 // src/models/participantModel.js
 import pool from "../config/db.js";
 
